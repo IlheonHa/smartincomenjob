@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-navy: #002A5B;
+  --color-brand-green: #76BC21;
+  --color-brand-blue: #00AEEF;
+  --color-brand-bg: #FDFDFD;
+  --color-brand-slate: #1E293B;
+  
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-soft: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@layer base {
+  body { 
+    @apply font-sans antialiased bg-brand-bg text-brand-slate leading-relaxed;
+    font-family: 'Pretendard', sans-serif;
+  }
+}
+
+@layer components {
+  .glass { 
+    @apply bg-white/90 backdrop-blur-xl;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-linear-to-br from-brand-navy to-brand-green;
+  }
+  
+  .btn-navy {
+    @apply bg-brand-navy text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-navy/25 cursor-pointer;
+  }
+  
+  .btn-green {
+    @apply bg-brand-green text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-green/25 cursor-pointer;
+  }
+  
+  .responsive-container {
+    @apply max-w-7xl mx-auto px-6;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
