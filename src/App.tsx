@@ -95,7 +95,7 @@ const Footer: React.FC = () => (
       
       <div className="pt-10 md:pt-12 border-t border-white/5 space-y-6 md:space-y-8">
         <div className="bg-white/5 p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/5 text-[11px] md:text-[12px] leading-relaxed text-slate-500">
-          <p className="mb-2"><strong>주식회사 스마트인컴</strong> | 대표자: 김경조 | 사업자등록번호: 231-12-03021 | 경기도 평택시 평택5로 34번길 6-7, 정주빌딩 3층</p>
+          <p className="mb-2"><strong>스마트인컴</strong> | 대표자: 김경조 | 사업자등록번호: 231-12-03021 | 경기도 평택시 평택5로 34번길 6-7, 정주빌딩 3층</p>
           <p className="mb-1">※ 본 플랫폼은 보험 모집을 지원하는 2026년형 테크 기반 수익 솔루션입니다. 공식 설계사 활동은 법정 자격 요건을 갖추어야 합니다.</p>
           <p>※ 수익 고지: 모든 수익은 개인의 활동량과 시장 상황에 따라 상이하며 특정 금액을 무조건적으로 보장하지 않습니다.</p>
         </div>
