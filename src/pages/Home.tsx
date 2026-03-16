@@ -154,7 +154,7 @@ const Home: React.FC = () => {
             </h2>
             <div className="space-y-6 max-w-3xl mx-auto">
               <p className="text-xl md:text-3xl text-slate-300 font-bold leading-tight">
-                아직도 효율 확정 안 된 DB를 <br className="hidden sm:block" /> 
+                아직도 쓸모없는 DB를 <br className="hidden sm:block" /> 
                 <span className="text-white underline decoration-brand-green decoration-4 underline-offset-8">6~15만원에 구입하시나요?</span>
               </p>
               <p className="text-lg md:text-2xl text-brand-green font-black">
@@ -455,7 +455,7 @@ const Home: React.FC = () => {
             {[
               {
                 stars: "★★★★★",
-                content: "매달 DB비로 200만원 넘게 썼는데, 스마트 인컴 사용 후 블로그에서 월 7건 문의가 들어오기 시작했어요. 신세계입니다.",
+                content: "매달 DB구입비로 200만원 넘게 썼는데, 스마트 인컴 사용 후 블로그에서 월 7건 문의가 들어오기 시작했어요. 신세계입니다.",
                 author: "6년차 보험 FC, 이○○"
               },
               {
