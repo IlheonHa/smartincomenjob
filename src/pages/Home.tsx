@@ -511,11 +511,11 @@ const Home: React.FC = () => {
         <div className="max-w-5xl mx-auto space-y-12 md:space-y-16">
           <img src={LOGO_URL} alt="Smart Income Final" className="h-10 md:h-12 w-auto mx-auto brightness-0 invert opacity-40 mb-8 md:mb-12" />
           <h2 className="text-3xl md:text-7xl font-[900] text-white leading-tight tracking-tighter">
-            2026년, 당신의 수익을<br />
+            당신의 수익을<br />
             <span className="text-brand-green">완전 자동화 하세요.</span>
           </h2>
           <p className="text-base md:text-2xl text-slate-300 font-medium max-w-3xl mx-auto leading-relaxed">
-            지금 지원하시면 선착순 100분께 2026년형<br />
+            지금 지원하시면 선착순으로<br />
             <span className="text-white font-black underline decoration-brand-green decoration-8 underline-offset-8">무상 온보딩 마스터 클래스</span>를 제공합니다.
           </p>
           
