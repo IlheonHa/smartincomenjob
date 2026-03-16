@@ -14,10 +14,22 @@ const Home: React.FC = () => {
   ];
 
   const faqs: FaqItem[] = [
-    { question: "2026년 현재, 보험 지식이 전혀 없어도 수익이 가능한가요?", answer: "네, 스마트 인컴의 2026년형 AI SalesOps Hub가 고객 데이터를 분석하고 최적의 제안서를 자동 생성합니다. N잡러님은 시스템 가이드를 따라 소통만 하시면 되며, 기초부터 실전까지 모든 교육은 온라인으로 제공됩니다." },
-    { question: "정말로 초기 비용이 0원인가요?", answer: "그렇습니다. 플랫폼 가입비, 교육비, 시스템 이용료 등 일체의 초기 비용이 없습니다. N잡러님의 성공이 곧 플랫폼의 수익이 되는 상생 구조로 설계되었습니다." },
-    { question: "영업 경험이 없는데 비대면으로도 성과가 나나요?", answer: "스마트 인컴은 '비대면 자동화'에 최적화된 최신 솔루션입니다. 시스템이 자동으로 잠재 고객의 관심을 유도하고 상담 예약을 잡아주므로, 정해진 매뉴얼대로 진행하기만 하면 됩니다." },
-    { question: "2026년 N잡러 활동의 혜택은 무엇인가요?", answer: "현재 지원하시는 선착순 N잡러분들께는 AI 콘텐츠 자동 생성 툴 무상 이용권과 1:1 온보딩 컨설팅 서비스를 2026년 한정 혜택으로 제공합니다." },
+    { 
+      question: "2026년 현재, 보험 지식이 전혀 없어도 수익이 가능한가요?", 
+      answer: "네, 스마트 인컴의 2026년형 AI SalesOps Hub가 고객 데이터를 분석하고 최적의 제안서를 자동 생성합니다. N잡러님은 시스템 가이드를 따라 소통만 하시면 되며, 기초부터 실전까지 모든 교육(온,오프라인)이 제공됩니다." 
+    },
+    { 
+      question: "정말로 초기 비용이 0원인가요?", 
+      answer: "그렇습니다. 사업시작을 위한 초기비용은 없습니다. 다만, 상위 1% 전문가교육, 시스템 이용료는 발생할 수있습니다. N잡러님의 성공이 곧 플랫폼의 수익이 되는 상생 구조로 설계되었습니다." 
+    },
+    { 
+      question: "영업 경험이 없는데 비대면으로도 성과가 나나요?", 
+      answer: "스마트 인컴은 '비대면 자동화'에 최적화된 최신 솔루션입니다. 시스템이 자동으로 잠재 고객의 관심을 유도하고 수집되므로, 정해진 매뉴얼대로 진행하기만 하면 됩니다." 
+    },
+    { 
+      question: "2026년 N잡러 활동의 혜택은 무엇인가요?", 
+      answer: "현재 지원하시는 선착순 N잡러분들께는 AI 콘텐츠 자동 생성 툴 무상 이용권과 1:1 온보딩 컨설팅 서비스를 한정 혜택으로 제공합니다." 
+    },
   ];
 
   const scrollToAnalysis = () => {
@@ -195,46 +207,141 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Specific AI Features Section */}
+      {/* Core Modules Section */}
       <section className="py-20 md:py-32 px-6 bg-slate-50/30 overflow-hidden">
         <div className="responsive-container">
-          <div className="max-w-3xl mb-16 md:mb-24 text-center mx-auto">
-            <h2 className="text-[13px] font-black text-brand-green uppercase tracking-[0.3em] mb-4">Smart Technology</h2>
+          <div className="max-w-4xl mb-16 md:mb-24 text-center mx-auto space-y-6">
+            <h2 className="text-[13px] font-black text-brand-green uppercase tracking-[0.3em]">Core Technology</h2>
             <h3 className="text-3xl md:text-5xl font-[900] text-brand-navy tracking-tighter leading-[1.2]">
-              영업은 시스템이,<br />
-              <span className="text-gradient">성과는 당신이.</span>
+              강력한 4대 핵심 모듈
             </h3>
+            <p className="text-base md:text-xl text-slate-500 font-medium leading-relaxed">
+              각 분야의 최고 전문가들이 설계한 AI 엔진이<br className="hidden md:block" />
+              당신의 비즈니스를 24시간 쉬지 않고 가동시킵니다.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div className="bg-slate-50 p-8 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-slate-100 relative group overflow-hidden">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
-               <div className="relative z-10 space-y-6 md:space-y-8">
-                  <div className="w-14 h-14 md:w-16 md:h-16 bg-brand-navy rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-3xl">📝</div>
-                  <h4 className="text-2xl md:text-3xl font-black text-brand-navy">AI 블로그 자동포스팅</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+            {[
+              { 
+                icon: "✨", 
+                title: "Golden System", 
+                desc: "상위 1% 전문가의 수익 자동화 비법, 황금키워드 기반 블로그, Threads, Shorts & Reels, 자동이웃신청 등 혁신적인 콘텐츠를 AI가 무한으로 자동생성합니다.",
+                tags: ["수익 자동화", "혁신 콘텐츠"]
+              },
+              { 
+                icon: "🎯", 
+                title: "스마트 고객 수집", 
+                desc: "타겟팅된 잠재 고객 데이터를 AI 시스템이 자동으로 수집하고 분류하여 리드를 확보합니다.",
+                tags: ["리드 수집", "타겟 분석"]
+              },
+              { 
+                icon: "📝", 
+                title: "AI 수익형 콘텐츠 생성", 
+                desc: "블로그, SNS 등 수익에 최적화된 고품질 콘텐츠를 AI가 자동으로 생성합니다.",
+                tags: ["자동 생성", "수익 최적화"]
+              },
+              { 
+                icon: "📊", 
+                title: "AI 보험분석 설계", 
+                desc: "복잡한 보험 데이터를 AI가 정밀 분석하여 최적의 맞춤형 설계를 제안합니다.(PDF 파일입력 -> 정밀분석 / 개인정보입력 -> 맞춤설계)",
+                tags: ["정밀 분석", "맞춤형 설계"]
+              }
+            ].map((module, i) => (
+              <div key={i} className="bg-white p-8 md:p-12 rounded-[3rem] md:rounded-[4rem] border border-slate-100 relative group overflow-hidden hover:shadow-2xl transition-all duration-500">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-navy/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                <div className="relative z-10 space-y-6">
+                  <div className="w-14 h-14 md:w-16 md:h-16 bg-brand-navy rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-3xl shadow-lg shadow-brand-navy/10">
+                    {module.icon}
+                  </div>
+                  <h4 className="text-2xl md:text-3xl font-black text-brand-navy">{module.title}</h4>
                   <p className="text-base md:text-lg text-slate-500 font-medium leading-relaxed">
-                    매일 어떤 내용을 올릴지 고민하지 마세요. 최신 보험 트렌드와 고객 관심사를 AI가 분석하여 블로그와 SNS 포스팅을 자동으로 생성하고 배포합니다. 24시간 잠들지 않는 당신만의 마케팅 채널을 소유하세요.
+                    {module.desc}
                   </p>
-                  <ul className="space-y-2 md:space-y-3 text-[11px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">
-                    <li className="flex items-center"><span className="text-brand-green mr-2">✓</span> 콘텐츠 자동 생성</li>
-                    <li className="flex items-center"><span className="text-brand-green mr-2">✓</span> 실시간 리드 수집 연동</li>
-                  </ul>
-               </div>
-            </div>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {module.tags.map(tag => (
+                      <span key={tag} className="px-3 py-1 bg-slate-50 text-slate-400 text-[10px] md:text-xs font-black rounded-lg border border-slate-100 uppercase tracking-widest">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <div className="bg-slate-50 p-8 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-slate-100 relative group overflow-hidden">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
-               <div className="relative z-10 space-y-6 md:space-y-8">
-                  <div className="w-14 h-14 md:w-16 md:h-16 bg-brand-navy rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-3xl">📊</div>
-                  <h4 className="text-2xl md:text-3xl font-black text-brand-navy">AI 분석기초설계</h4>
-                  <p className="text-base md:text-lg text-slate-500 font-medium leading-relaxed">
-                    전문 지식이 없어도 괜찮습니다. 고객의 보장 공백을 AI가 실시간으로 정밀 분석하여 최적의 기초 설계를 제안합니다. 복잡한 수치 계산은 시스템에 맡기고, 당신은 고객과의 신뢰 구축에만 집중하세요.
+      {/* Support & Mentorship Section */}
+      <section className="py-20 md:py-32 px-6 bg-white relative overflow-hidden">
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-green/5 rounded-full blur-3xl"></div>
+        <div className="responsive-container relative z-10">
+          <div className="bg-brand-navy rounded-[3rem] md:rounded-[5rem] p-10 md:p-24 text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-green/10 to-transparent"></div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8 md:space-y-12">
+                <div className="space-y-6">
+                  <h2 className="text-3xl md:text-6xl font-[900] leading-[1.1] tracking-tighter">
+                    경험, 지식이 없다고<br />
+                    <span className="text-brand-green">두려워하지 마세요.</span>
+                  </h2>
+                  <p className="text-lg md:text-2xl text-slate-300 font-medium leading-relaxed">
+                    스마트 인컴은 당신의 시작을 혼자 두지 않습니다.<br className="hidden md:block" />
+                    전문가 그룹이 당신의 성공을 위해 모든 노하우를 쏟아붓습니다.
                   </p>
-                  <ul className="space-y-2 md:space-y-3 text-[11px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">
-                    <li className="flex items-center"><span className="text-brand-green mr-2">✓</span> AI 정밀 분석 시스템</li>
-                    <li className="flex items-center"><span className="text-brand-green mr-2">✓</span> 맞춤형 제안서 자동 생성</li>
-                  </ul>
-               </div>
+                </div>
+
+                <div className="space-y-8">
+                  <div className="flex items-center space-x-6 group">
+                    <div className="w-14 h-14 md:w-20 md:h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl md:text-4xl group-hover:bg-brand-green transition-colors duration-500">
+                      🎓
+                    </div>
+                    <div>
+                      <h4 className="text-xl md:text-2xl font-black mb-2">1:1 밀착 컨설팅 & 교육</h4>
+                      <p className="text-slate-400 font-medium text-sm md:text-lg">기초 이론부터 실전 활용까지 전문가가 직접 가이드합니다.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-6 group">
+                    <div className="w-14 h-14 md:w-20 md:h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl md:text-4xl group-hover:bg-brand-green transition-colors duration-500">
+                      🔑
+                    </div>
+                    <div>
+                      <h4 className="text-xl md:text-2xl font-black mb-2">상위 1% 수익 자동화 비법</h4>
+                      <p className="text-slate-400 font-medium text-sm md:text-lg">검증된 전문가들의 황금 키워드와 운영 전략을 그대로 공유합니다.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative">
+                <div className="bg-white/5 p-8 md:p-12 rounded-[3rem] border border-white/10 backdrop-blur-sm space-y-8">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black text-brand-green uppercase tracking-[0.3em]">Mentorship Program</span>
+                    <div className="flex -space-x-2">
+                      {[1,2,3].map(i => (
+                        <div key={i} className="w-8 h-8 rounded-full border-2 border-brand-navy bg-slate-700"></div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-brand-green w-[85%]"></div>
+                    </div>
+                    <div className="flex justify-between text-[11px] font-bold text-slate-400">
+                      <span>초보자 적응률</span>
+                      <span className="text-white">85% UP</span>
+                    </div>
+                  </div>
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5 italic text-slate-300 text-sm md:text-base leading-relaxed">
+                    "컴퓨터를 잘 몰라도, 영업을 해본 적 없어도 괜찮습니다. 시스템이 90%를 하고, 나머지 10%는 저희가 채워드립니다."
+                  </div>
+                  <Link to="/apply" className="block w-full text-center bg-brand-green text-white py-5 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-brand-green/20 transition-all">
+                    전문가 컨설팅 신청하기
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
