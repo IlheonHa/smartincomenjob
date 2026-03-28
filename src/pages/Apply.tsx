@@ -138,7 +138,10 @@ const Apply: React.FC = () => {
               </div>
               <div className="space-y-3">
                 <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">이메일 주소</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-6 py-4 md:py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-brand-green/10 focus:border-brand-green outline-none transition-all font-bold text-slate-700" placeholder="njob@2026.com" />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-6 py-4 md:py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-brand-green/10 focus:border-brand-green outline-none transition-all font-bold text-slate-700" placeholder="smartincome@gmail.com" />
+                <p className="text-[14px] md:text-base font-black text-red-600 uppercase tracking-widest mt-2">
+                  * 반드시 @gmail.com 이메일을 작성해주세요
+                </p>
               </div>
               <div className="space-y-3">
                 <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">활동 거주지역</label>

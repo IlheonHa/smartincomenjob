@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApplicationData } from '../types';
 import { supabase } from '../lib/supabase';
+import * as XLSX from 'xlsx';
 
 const Admin: React.FC = () => {
   const [leads, setLeads] = useState<ApplicationData[]>([]);
@@ -18,6 +19,15 @@ const Admin: React.FC = () => {
   const [newPassword, setNewPassword] = useState('');
   const [changeSuccess, setChangeSuccess] = useState('');
   const [changeError, setChangeError] = useState('');
+  
+  // Detail Modal states
+  const [selectedLead, setSelectedLead] = useState<ApplicationData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+  // Edit states
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editFormData, setEditFormData] = useState<Partial<ApplicationData>>({});
 
   useEffect(() => {
     checkUser();
@@ -30,6 +40,143 @@ const Admin: React.FC = () => {
       fetchLeads();
     }
     setLoading(false);
+  };
+
+  const handleViewDetails = (lead: ApplicationData) => {
+    setSelectedLead(lead);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedLead(null);
+    setIsModalOpen(false);
+    setIsEditMode(false);
+    setEditFormData({});
+  };
+
+  const handleEditClick = () => {
+    if (selectedLead) {
+      setEditFormData({ ...selectedLead });
+      setIsEditMode(true);
+    }
+  };
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveEdit = async () => {
+    if (!selectedLead) return;
+    
+    setIsUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('applications')
+        .update(editFormData)
+        .eq('id', selectedLead.id);
+
+      if (error) throw error;
+
+      // Update local state
+      const updatedLead = { ...selectedLead, ...editFormData } as ApplicationData;
+      setLeads(leads.map(lead => lead.id === selectedLead.id ? updatedLead : lead));
+      setSelectedLead(updatedLead);
+      setIsEditMode(false);
+      alert('정보가 성공적으로 수정되었습니다.');
+    } catch (err: any) {
+      console.error('Error updating lead:', err);
+      alert(`수정 실패: ${err.message}`);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDownloadExcel = () => {
+    if (leads.length === 0) {
+      alert('다운로드할 데이터가 없습니다.');
+      return;
+    }
+
+    const dataToExport = leads.map(lead => ({
+      '이름': lead.name,
+      '연락처': lead.phone,
+      '이메일': lead.email,
+      '지역': lead.region,
+      '직업상태': lead.status,
+      '관심분야': lead.interest,
+      '활동시간': lead.time,
+      '자기소개': lead.intro,
+      '지원일시': lead.appliedAt ? new Date(lead.appliedAt).toLocaleString('ko-KR') : '',
+      '관리상태': lead.statusTag === 'new' ? '신규 지원' : 
+                 lead.statusTag === 'contacted' ? '연락 완료' :
+                 lead.statusTag === 'meeting' ? '미팅 예정' :
+                 lead.statusTag === 'joined' ? '합류 완료' : lead.statusTag
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, '지원자목록');
+    
+    // Set column widths
+    const wscols = [
+      { wch: 10 }, { wch: 15 }, { wch: 25 }, { wch: 15 }, { wch: 15 },
+      { wch: 20 }, { wch: 15 }, { wch: 50 }, { wch: 25 }, { wch: 15 }
+    ];
+    worksheet['!cols'] = wscols;
+
+    XLSX.writeFile(workbook, `N잡러_지원자목록_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
+
+  const handleUpdateStatus = async (id: string, newStatus: ApplicationData['statusTag']) => {
+    setIsUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('applications')
+        .update({ statusTag: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      // Update local state
+      setLeads(leads.map(lead => 
+        lead.id === id ? { ...lead, statusTag: newStatus } : lead
+      ));
+      
+      if (selectedLead && selectedLead.id === id) {
+        setSelectedLead({ ...selectedLead, statusTag: newStatus });
+      }
+      
+      alert('상태가 성공적으로 업데이트되었습니다.');
+    } catch (err: any) {
+      console.error('Error updating status:', err);
+      alert(`상태 업데이트 실패: ${err.message}`);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteLead = async (id: string) => {
+    if (!window.confirm('정말로 이 지원자를 삭제하시겠습니까?')) return;
+    
+    setIsUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('applications')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setLeads(leads.filter(lead => lead.id !== id));
+      closeModal();
+      alert('지원자가 삭제되었습니다.');
+    } catch (err: any) {
+      console.error('Error deleting lead:', err);
+      alert(`삭제 실패: ${err.message}`);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const fetchLeads = async () => {
@@ -340,6 +487,12 @@ const Admin: React.FC = () => {
             로그아웃
           </button>
           <button 
+            onClick={handleDownloadExcel}
+            className="bg-green-600 text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-green-600/10 hover:shadow-green-600/20 active:scale-95 transition-all flex items-center space-x-2"
+          >
+            <span>📊 엑셀 다운로드</span>
+          </button>
+          <button 
             onClick={fetchLeads} 
             className="bg-brand-navy text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-brand-navy/10 hover:shadow-brand-navy/20 active:scale-95 transition-all"
           >
@@ -415,7 +568,10 @@ const Admin: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-8 py-6">
-                    <button className="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-brand-navy hover:text-white transition-all">
+                    <button 
+                      onClick={() => handleViewDetails(lead)}
+                      className="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-brand-navy hover:text-white transition-all"
+                    >
                       상세보기
                     </button>
                   </td>
@@ -433,6 +589,194 @@ const Admin: React.FC = () => {
           </table>
         </div>
       </div>
+      {/* Detail Modal */}
+      {isModalOpen && selectedLead && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+          <div className="absolute inset-0 bg-brand-navy/60 backdrop-blur-sm" onClick={closeModal}></div>
+          <div className="relative bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="p-8 md:p-12 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-start mb-10">
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-black text-brand-navy mb-2">
+                    {isEditMode ? `${selectedLead.name} 정보 수정` : `${selectedLead.name} 지원자 상세 정보`}
+                  </h3>
+                  <p className="text-slate-400 font-bold">지원일시: {selectedLead.appliedAt ? new Date(selectedLead.appliedAt).toLocaleString('ko-KR') : '정보 없음'}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  {!isEditMode && (
+                    <button 
+                      onClick={handleEditClick}
+                      className="px-4 py-2 bg-brand-navy/5 text-brand-navy rounded-xl font-bold text-xs hover:bg-brand-navy/10 transition-all"
+                    >
+                      정보 수정
+                    </button>
+                  )}
+                  <button onClick={closeModal} className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 transition-all">✕</button>
+                </div>
+              </div>
+
+              {isEditMode ? (
+                <div className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">이름</label>
+                      <input 
+                        name="name" 
+                        value={editFormData.name || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">연락처</label>
+                      <input 
+                        name="phone" 
+                        value={editFormData.phone || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">이메일</label>
+                      <input 
+                        name="email" 
+                        value={editFormData.email || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">거주지역</label>
+                      <input 
+                        name="region" 
+                        value={editFormData.region || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">직업 상태</label>
+                      <input 
+                        name="status" 
+                        value={editFormData.status || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">관심 분야</label>
+                      <input 
+                        name="interest" 
+                        value={editFormData.interest || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">활동 가능 시간</label>
+                      <input 
+                        name="time" 
+                        value={editFormData.time || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">자기소개 및 포부</label>
+                    <textarea 
+                      name="intro" 
+                      value={editFormData.intro || ''} 
+                      onChange={handleEditChange}
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy resize-none"
+                    />
+                  </div>
+                  <div className="flex space-x-3 pt-6">
+                    <button 
+                      onClick={handleSaveEdit}
+                      disabled={isUpdating}
+                      className="flex-grow bg-brand-navy text-white py-4 rounded-2xl font-black text-sm shadow-xl shadow-brand-navy/10 hover:shadow-brand-navy/20 transition-all disabled:opacity-50"
+                    >
+                      {isUpdating ? '저장 중...' : '수정 완료'}
+                    </button>
+                    <button 
+                      onClick={() => setIsEditMode(false)}
+                      className="px-8 bg-slate-100 text-slate-500 py-4 rounded-2xl font-black text-sm hover:bg-slate-200 transition-all"
+                    >
+                      취소
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div className="space-y-6">
+                      <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">연락처</label>
+                        <div className="text-lg font-black text-brand-navy">{selectedLead.phone}</div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">이메일</label>
+                        <div className="text-lg font-black text-brand-navy">{selectedLead.email}</div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">거주지역</label>
+                        <div className="text-lg font-black text-brand-navy">{selectedLead.region}</div>
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                      <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">현재 직업 상태</label>
+                        <div className="text-lg font-black text-brand-navy">{selectedLead.status}</div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">관심 분야</label>
+                        <div className="text-lg font-black text-brand-navy">{selectedLead.interest}</div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">활동 가능 시간</label>
+                        <div className="text-lg font-black text-brand-navy">{selectedLead.time}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-12">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">자기소개 및 포부</label>
+                    <div className="bg-slate-50 p-6 rounded-2xl text-slate-700 font-medium leading-relaxed">
+                      {selectedLead.intro || '입력된 내용이 없습니다.'}
+                    </div>
+                  </div>
+
+                  <div className="pt-10 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="flex items-center space-x-3">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">관리 상태 변경:</label>
+                      <select 
+                        value={selectedLead.statusTag || 'new'} 
+                        onChange={(e) => handleUpdateStatus(selectedLead.id, e.target.value as any)}
+                        disabled={isUpdating}
+                        className="bg-slate-50 border border-slate-100 rounded-lg px-4 py-2 text-sm font-black text-brand-navy outline-none focus:ring-2 focus:ring-brand-navy/10"
+                      >
+                        <option value="new">신규 지원</option>
+                        <option value="contacted">연락 완료</option>
+                        <option value="meeting">미팅 예정</option>
+                        <option value="joined">합류 완료</option>
+                      </select>
+                    </div>
+                    <button 
+                      onClick={() => handleDeleteLead(selectedLead.id)}
+                      disabled={isUpdating}
+                      className="text-red-500 font-black text-xs uppercase tracking-widest hover:underline disabled:opacity-50"
+                    >
+                      지원자 삭제
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
