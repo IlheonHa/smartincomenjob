@@ -102,6 +102,7 @@ const Admin: React.FC = () => {
       '이름': lead.name,
       '연락처': lead.phone,
       '이메일': lead.email,
+      '비밀번호': lead.password,
       '지역': lead.region,
       '직업상태': lead.status,
       '관심분야': lead.interest,
@@ -120,7 +121,7 @@ const Admin: React.FC = () => {
     
     // Set column widths
     const wscols = [
-      { wch: 10 }, { wch: 15 }, { wch: 25 }, { wch: 15 }, { wch: 15 },
+      { wch: 10 }, { wch: 15 }, { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 15 },
       { wch: 20 }, { wch: 15 }, { wch: 50 }, { wch: 25 }, { wch: 15 }
     ];
     worksheet['!cols'] = wscols;
@@ -637,10 +638,19 @@ const Admin: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">이메일</label>
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">이메일(아이디)</label>
                       <input 
                         name="email" 
                         value={editFormData.email || ''} 
+                        onChange={handleEditChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">비밀번호</label>
+                      <input 
+                        name="password" 
+                        value={editFormData.password || ''} 
                         onChange={handleEditChange}
                         className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-2 focus:ring-brand-navy/10 outline-none font-bold text-brand-navy"
                       />
@@ -717,8 +727,12 @@ const Admin: React.FC = () => {
                         <div className="text-lg font-black text-brand-navy">{selectedLead.phone}</div>
                       </div>
                       <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">이메일</label>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">이메일(아이디)</label>
                         <div className="text-lg font-black text-brand-navy">{selectedLead.email}</div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">비밀번호</label>
+                        <div className="text-lg font-black text-brand-navy">{selectedLead.password}</div>
                       </div>
                       <div>
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">거주지역</label>

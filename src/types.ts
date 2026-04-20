@@ -4,6 +4,7 @@ export interface ApplicationData {
   name: string;
   phone: string;
   email: string;
+  password?: string;
   region: string;
   status: string; // 직장인, 자영업 등
   interest: string;

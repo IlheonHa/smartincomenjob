@@ -17,6 +17,7 @@ const Apply: React.FC = () => {
     name: '',
     phone: '',
     email: '',
+    password: '',
     region: '',
     status: '직장인',
     interest: '보험/재무',
@@ -42,8 +43,16 @@ const Apply: React.FC = () => {
     setStatusMsg('제출을 시작합니다...');
 
     // 1. Basic Validation
-    if (!formData.name || !formData.phone || !formData.email || !formData.region) {
-      const msg = '모든 필수 항목(이름, 연락처, 이메일, 지역)을 입력해 주세요.';
+    if (!formData.name || !formData.phone || !formData.email || !formData.password || !formData.region) {
+      const msg = '모든 필수 항목(이름, 연락처, 이메일, 비밀번호, 지역)을 입력해 주세요.';
+      console.log(msg);
+      setStatusMsg(msg);
+      alert(msg);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      const msg = '비밀번호는 6자리 이상 작성해야 합니다.';
       console.log(msg);
       setStatusMsg(msg);
       alert(msg);
@@ -67,6 +76,7 @@ const Apply: React.FC = () => {
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
+        password: formData.password,
         region: formData.region,
         status: formData.status,
         interest: formData.interest,
@@ -137,10 +147,17 @@ const Apply: React.FC = () => {
                 <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-6 py-4 md:py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-brand-green/10 focus:border-brand-green outline-none transition-all font-bold text-slate-700" placeholder="010-0000-0000" />
               </div>
               <div className="space-y-3">
-                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">이메일 주소</label>
+                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">이메일 주소(시스템 아이디로 사용예정)</label>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-6 py-4 md:py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-brand-green/10 focus:border-brand-green outline-none transition-all font-bold text-slate-700" placeholder="smartincome@gmail.com" />
                 <p className="text-[14px] md:text-base font-black text-red-600 uppercase tracking-widest mt-2">
                   * 반드시 @gmail.com 이메일을 작성해주세요
+                </p>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">비밀번호</label>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full px-6 py-4 md:py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-brand-green/10 focus:border-brand-green outline-none transition-all font-bold text-slate-700" placeholder="6자리 이상 입력" />
+                <p className="text-[14px] md:text-base font-black text-red-600 uppercase tracking-widest mt-2">
+                  * 비밀번호는 6자리 이상 작성해주세요
                 </p>
               </div>
               <div className="space-y-3">
